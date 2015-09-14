@@ -9,6 +9,6 @@ $app->boot();
 
 require __DIR__.'/../app/PushService/Monitor.php';
 
-$listenAddr = 'udp://192.168.10.10:8001';
+$listenAddr = getenv('listern_addr');
 Monitor::listen($listenAddr);
 
