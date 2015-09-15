@@ -1,16 +1,10 @@
 <?php
 
-class Client extends \Eloquent {
+class Client extends Eloquent {
 
-    public $timestamps = false;
+    // Enable soft delete
+    use SoftDeletingTrait;
+    protected $dates = ['deleted_at'];
 
-    protected $connection = 'mysql';
-
-    protected $fillable = [
-        'id',
-        'type',
-        'external_addr',
-        'internal_addr',
-    ];
-
+    protected $guarded = [];
 }

@@ -34,7 +34,7 @@ class Monitor
             return;
         }
         $dataArray['external_addr'] = $addr;
-        $dataArray['timestamp'] = date('Y-m-d H:i:s', time());
+        $dataArray['updated_at'] = date('Y-m-d H:i:s', time());
 
         $where = array('id'=>$dataArray['id']);
         $client = Client::updateOrCreate($where, $dataArray);
