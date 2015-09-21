@@ -3,10 +3,14 @@
 use Robot\Listeners\UserCreatorListener;
 use Robot\Listeners\AuthenticatorListener;
 
-class AuthController extends BaseController implements UserCreatorListener, AuthenticatorListener {
+class AuthController extends BaseController implements UserCreatorListener, AuthenticatorListener
+{
 
     public function authenticate()
     {
+        if (Input::has('robot_sn')) {
+            return App::make('Robot\Users\Authenticator')->authByRobotSn($this, Input::only('robot_sn'));
+        }
         $data = Input::only('phone', 'password');
         return App::make('Robot\Users\Authenticator')->authByPhone($this, $data);
     }
@@ -14,7 +18,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
     /**
      * Actually creates the new user account
      */
-    public function store()
+    public function register()
     {
         $userData = Input::only('phone', 'password');
         return App::make('Robot\Creators\UserCreator')->create($this, $userData);
@@ -23,7 +27,16 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
     public function logout()
     {
         Auth::logout();
-        return JsonView::make('success');
+        return $this->logoutView();
+    }
+
+    /**
+     * Creates the new user account and bind a bobot
+     */
+    public function initialize()
+    {
+        $data = Input::only('app_type', 'robot_sn');
+        return App::make('Robot\Creators\InitializeCreator')->createAndBind($this, $data);
     }
 
     /**
@@ -35,7 +48,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
     public function userCreated($user)
     {
         Auth::login($user, true);
-        return JsonView::make('success', ['user' => $user]);
+        return $this->userView($user);
     }
 
     public function userValidationError($errors)
@@ -51,22 +64,50 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
 
     public function userNotFound()
     {
-        $message = array(
-            'errors' => 'Wrong username or password.',
-        );
-        return JsonView::make('failed', $message);
+        return JsonView::make('failed', ['errors' => 'Wrong username or password.']);
     }
 
     public function userFound($user)
     {
         Auth::login($user, true);
+        return $this->userView($user);
+    }
 
-        $jsonStr = json_encode($user, true);
-        $code = md5($user['phone'].Config::get('app.forum_key'));
-        $srcUrl = Config::get('app.forum_url').'login?github_id='.$user['id'].'&phone='.$user['phone'].'&code='.$code;
-        //$header = array('Location' => 'http://phphub.app:8000/login?github_id=1&phone=18920298765&code=693c8c6794b8c4d6d3d371be02b782dd');
-        //return JsonView::make('success', ['user' => $user]);
+    private function userView($user)
+    {
+        $forumName = $user->getForumName();
+        $code = md5($forumName.Config::get('app.forum_key'));
+        $srcUrl = Config::get('app.forum_url').'login?id='.$user['id'].'&name='.$forumName.'&code='.$code;
+
+        if (Request::wantsJson()) {
+            $script = ['type' => 'text/javascript', 'src'  => $srcUrl];
+            return JsonView::make('success', ['user' => $user, 'script' => $script]);
+        }
+
+        $resp = [
+            'code' => 'success',
+            'message' => ['user' => $user],
+            '_token' => csrf_token(),
+        ];
+        $jsonStr = json_encode($resp, true);
+
         return View::make('auth.userfound', compact('jsonStr', 'srcUrl'));
     }
 
+    private function logoutView()
+    {
+        $srcUrl = Config::get('app.forum_url').'logout';
+
+        if (Request::wantsJson()) {
+            $script = ['type' => 'text/javascript', 'src'  => $srcUrl];
+            return JsonView::make('success', ['script' => $script]);
+        }
+
+        $resp = [
+            'code' => 'success',
+            '_token' => csrf_token(),
+        ];
+        $jsonStr = json_encode($resp, true);
+        return View::make('auth.logout', compact('jsonStr', 'srcUrl'));
+    }
 }

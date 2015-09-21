@@ -67,7 +67,19 @@ App::error(function (Laracasts\Validation\FormValidationException $exception, $c
         'error' => implode(' ', $msgBag->all()),
     );
 
-    return JsonView::make('errors', $message);
+    return JsonView::make('error', $message);
+});
+
+/**
+ *  Model not found
+ */
+App::error(function (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+    if (Config::get('app.debug')) {
+        return;
+    }
+
+    $message = ['error' => 'data not found'];
+    return JsonView::make('error', $message);
 });
 
 /*

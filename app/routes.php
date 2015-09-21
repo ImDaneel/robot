@@ -28,13 +28,48 @@ Route::post('login', [
     'uses' => 'AuthController@authenticate',
 ]);
 
-Route::post('signup',  [
-    'as' => 'signup',
-    'uses' => 'AuthController@store',
+Route::post('register',  [
+    'as' => 'register',
+    'uses' => 'AuthController@register',
 ]);
 
 Route::get('logout', [
     'as' => 'logout',
     'uses' => 'AuthController@logout',
 ]);
+
+Route::post('initialize', [
+    'as' => 'initialize',
+    'uses' => 'AuthController@initialize',
+]);
+
+# ------------------ User stuff ------------------------
+
+Route::get('user', [
+    'as' => 'user.show',
+    'uses' => 'UserController@show',
+    'before' => 'auth',
+]);
+
+Route::post('user/update', [
+    'as' => 'user.update',
+    'uses' => 'UserController@update',
+    'before' => 'auth',
+]);
+
+Route::delete('user/{id}', [
+    'as' => 'user.delete',
+    'uses' => 'UserController@destroy',
+    'before' => 'auth',
+]);
+
+Route::get('user/robots', [
+    'as' => 'user.robots',
+    'uses' => 'UserController@getRobots',
+    'before' => 'auth',
+]);
+
+# ------------------ Resource Route ------------------------
+
+//Route::resource('user', 'UserController', ['only' => ['show', 'update', 'destroy']]);
 

@@ -1,8 +1,9 @@
 <?php namespace Robot\Creators;
 
-use Robot\Validators\UserSignupValidator;
+use Robot\Validators\RegisterValidator;
 use Robot\Listeners\UserCreatorListener;
 use User;
+use Auth;
 
 /**
 * This class can call the following methods on the observer object:
@@ -12,19 +13,23 @@ use User;
 */
 class UserCreator
 {
-    protected $userModel;
     protected $validator;
 
-    public function __construct(User $userModel, UserSignupValidator $signupValidator)
+    public function __construct(RegisterValidator $registerValidator)
     {
-        $this->userModel = $userModel;
-        $this->validator = $signupValidator;
+        $this->validator = $registerValidator;
     }
 
     public function create(UserCreatorListener $observer, $data)
     {
         // Validation
         $this->validator->validate($data);
+
+        $user = Auth::user();
+        if ($user) {
+            $this->updateUserRecord($observer, $data);
+        }
+
         return $this->createValidUserRecord($observer, $data);
     }
 
@@ -35,5 +40,15 @@ class UserCreator
             return $observer->userValidationError($user->getErrors());
         }
         return $observer->userCreated($user);
+    }
+
+    private function updateUserRecord($observer, $data)
+    {
+        if (! empty($user->phone)) {
+                return $observer->userValidationError('this account is already registered');
+            }
+
+            $user->update($data);
+            return $observer->userCreated($user);
     }
 }

@@ -29,8 +29,16 @@ class Authenticator
         if ($user) {
             return $listener->UserFound($user);
         }
-
         return $listener->userNotFound();
     }
 
+    public function authByRobotSn(AuthenticatorListener $listener, $robot_sn)
+    {
+        $user = $this->userModel->getByRobotSn($robot_sn);
+
+        if ($user) {
+            return $listener->UserFound($user);
+        }
+        return $listener->userNotFound();
+    }
 }

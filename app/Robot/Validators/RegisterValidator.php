@@ -2,7 +2,7 @@
 
 use Laracasts\Validation\FormValidator;
 
-class UserSignupValidator extends FormValidator
+class RegisterValidator extends FormValidator
 {
     protected $rules = [
         'phone'       => 'numeric|required|unique:users',
