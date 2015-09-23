@@ -39,6 +39,23 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
         return App::make('Robot\Creators\InitializeCreator')->createAndBind($this, $data);
     }
 
+    public function sendVerifyCode()
+    {
+        $phone = Input::get('phone');
+        $rand = rand(1000, 9999);
+        $ret = Robot\Utils\Sms::send($phone, $rand, 5);
+
+        if ($ret['code'] == 'success') {
+            VerifyCode::create([
+                'phone' => $phone,
+                'code' => $rand,
+                'created_at' => time(),
+            ]);
+        }
+
+        return JsonView::make($ret['code'], isset($ret['error'])?['errors'=>$ret['error']]:null);
+    }
+
     /**
      * ----------------------------------------
      * UserCreatorListener Delegate

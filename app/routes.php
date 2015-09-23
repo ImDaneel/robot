@@ -43,6 +43,11 @@ Route::post('initialize', [
     'uses' => 'AuthController@initialize',
 ]);
 
+Route::get('send-verify-code', [
+    'as' => 'send-verify-code',
+    'uses' => 'AuthController@sendVerifyCode',
+]);
+
 # ------------------ User stuff ------------------------
 
 Route::get('user', [

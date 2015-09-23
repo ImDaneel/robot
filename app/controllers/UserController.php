@@ -34,11 +34,17 @@ class UserController extends \BaseController
         $id = Auth::id();
         $user = User::findOrFail($id);
 
-        $data = Input::except('_token', 'avatar_image');
+        $data = Input::except('_token', 'avatar_image', 'verify_code');
         App::make('Robot\Validators\UserUpdateValidator')->validate($data);
 
         if (isset($data['phone'])) {
-            //check dynamic pin
+            if (! empty($user->phone)) {
+                return JsonView::make('error', ['errors'=>'You can not modify phone']);
+            }
+            
+            if (! VerifyCode::verify($data['phone'], Input::get('verify_code'))) {
+                return JsonView::make('error', ['errors'=>'verify code error']);
+            }
         }
 
         if (($file = Input::file('avatar_image')) != null) {
