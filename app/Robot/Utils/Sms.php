@@ -47,7 +47,6 @@ class Sms
         ];
 
         $output = Curl::request($url, 'POST', $option);
-        echo $output ."\n";
         $outArray = json_decode($output, true);
         if (! isset($outArray['statusCode']) || $outArray['statusCode'] != '000000') {
             if (! isset($outArray['statusCode']) || ! isset(static::$errorMessage[$outArray['statusCode']])) {
