@@ -40,6 +40,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $this->where('phone', '=', $phone)->where('password', '=', $password)->first();
     }
 
+    public function getByPhoneAndVerifyCode($phone, $verifyCode)
+    {
+        if (! VerifyCode::verify($phone, $verifyCode)) {
+            return null;
+        }
+        return $this->where('phone', '=', $phone)->first();
+    }
+
     public function getByRobotSn($robot_sn)
     {
         try {

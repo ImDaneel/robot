@@ -11,8 +11,13 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
         if (Input::has('robot_sn')) {
             return App::make('Robot\Users\Authenticator')->authByRobotSn($this, Input::only('robot_sn'));
         }
-        $data = Input::only('phone', 'password');
-        return App::make('Robot\Users\Authenticator')->authByPhone($this, $data);
+        if (Input::has('password')) {
+            $data = Input::only('phone', 'password');
+            return App::make('Robot\Users\Authenticator')->authByPassword($this, $data);
+        } else {
+            $data = Input::only('phone', 'verify_code');
+            return App::make('Robot\Users\Authenticator')->authByVerifyCode($this, $data);
+        }
     }
 
     /**
@@ -20,7 +25,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
      */
     public function register()
     {
-        $userData = Input::only('phone', 'password');
+        $userData = Input::only('app_type', 'phone', 'password');
         return App::make('Robot\Creators\UserCreator')->create($this, $userData);
     }
 

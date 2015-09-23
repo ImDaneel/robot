@@ -21,10 +21,21 @@ class Authenticator
         $this->validator = $userLoginValidator;
     }
 
-    public function authByPhone(AuthenticatorListener $listener, $data)
+    public function authByPassword(AuthenticatorListener $listener, $data)
     {
         $this->validator->validate($data);
         $user = $this->userModel->getByPhoneAndPassword($data['phone'], $data['password']);
+
+        if ($user) {
+            return $listener->UserFound($user);
+        }
+        return $listener->userNotFound();
+    }
+
+    public function authByVerifyCode(AuthenticatorListener $listener, $data)
+    {
+        $this->validator->validate($data);
+        $user = $this->userModel->getByPhoneAndVerifyCode($data['phone'], $data['verify_code']);
 
         if ($user) {
             return $listener->UserFound($user);

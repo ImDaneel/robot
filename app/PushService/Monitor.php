@@ -14,6 +14,13 @@ class Monitor
 
         while (true) {
             $msg = stream_socket_recvfrom($socket, 1024, 0, $peer);
+            
+            $msgArray = json_decode($msg, true);
+            if (! isset($msgArray['topic']) || $msgArray['topic'] != 'ShakeHands' 
+                || ! isset($msgArray['content'])) {
+                continue;
+            }
+
             //echo "Client : $peer\n";
             //echo "Receive : {$msg}\n";
 /*            $retArray = array(
@@ -23,21 +30,21 @@ class Monitor
             $outMsg = json_encode($retArray, true);
             stream_socket_sendto($socket, $outMsg, 0, $peer);
 */
-            static::checkin($peer, $msg);
+            static::checkin($peer, $msgArray['content']);
         }
     }
 
     private static function checkin($addr, $data)
     {
-        $dataArray = json_decode($data, true);
-        if ($dataArray == null) {
-            return;
-        }
-        $dataArray['external_addr'] = $addr;
-        $dataArray['updated_at'] = date('Y-m-d H:i:s', time());
+        $data['external_addr'] = $addr;
+        $data['updated_at'] = date('Y-m-d H:i:s', time());
+        $where = array('id'=>$data['id']);
 
-        $where = array('id'=>$dataArray['id']);
-        $client = Client::updateOrCreate($where, $dataArray);
+        try {
+            $client = Client::updateOrCreate($where, $data);
+        } catch (\Exception $e) {
+            // do noting
+        }
     }
 
     public static function push($id, $message)
