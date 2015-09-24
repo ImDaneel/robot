@@ -6,7 +6,7 @@ use Robot\Listeners\AuthenticatorListener;
 class AuthController extends BaseController implements UserCreatorListener, AuthenticatorListener
 {
 
-    public function authenticate()
+    public function login()
     {
         if (Input::has('robot_sn')) {
             return App::make('Robot\Users\Authenticator')->authByRobotSn($this, Input::only('robot_sn'));
@@ -58,7 +58,20 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
             ]);
         }
 
-        return JsonView::make($ret['code'], isset($ret['error'])?['errors'=>$ret['error']]:null);
+        return JsonView::make($ret['code'], isset($ret['error'])?['errors'=>$ret['error']]:[]);
+    }
+
+    public function authenticate()
+    {
+        $data = Input::all();
+        App::make('Robot\Validators\AuthValidator')->validate($data);
+        if (! VerifyCode::verify($data['phone'], $data['verify_code'])) {
+            return JsonView::make('error', ['errors'=>'verify code error']);
+        }
+
+        $sign = Robot::findBySn($data['sn'])->getAdminSign();
+        $datetime = date('YmdHis', time());
+        $token = md5($data['phone'].$data['sn'].$datetime);
     }
 
     /**

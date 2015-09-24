@@ -1,8 +1,8 @@
 <?php
 
-require __DIR__.'/../models/Client.php';
+require __DIR__.'/../../models/Client.php';
 
-class Monitor
+class PushServer
 {
 
     public static function listen($listenAddr)
@@ -38,7 +38,7 @@ class Monitor
     {
         $data['external_addr'] = $addr;
         $data['updated_at'] = date('Y-m-d H:i:s', time());
-        $where = array('id'=>$data['id']);
+        $where = array('sign'=>$data['sign']);
 
         try {
             $client = Client::updateOrCreate($where, $data);
@@ -47,9 +47,9 @@ class Monitor
         }
     }
 
-    public static function push($id, $message)
+    public static function push($sign, $message)
     {
-        $client = Client::find($id);
+        $client = Client::find($sign);
         if ($client == null) {
             return false;
         }

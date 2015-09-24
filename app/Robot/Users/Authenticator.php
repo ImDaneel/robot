@@ -3,6 +3,7 @@
 use Robot\Listeners\AuthenticatorListener;
 use Robot\Validators\UserLoginValidator;
 use User;
+use VerifyCode;
 
 /**
 * This class can call the following methods on the listener object:
@@ -35,12 +36,23 @@ class Authenticator
     public function authByVerifyCode(AuthenticatorListener $listener, $data)
     {
         $this->validator->validate($data);
-        $user = $this->userModel->getByPhoneAndVerifyCode($data['phone'], $data['verify_code']);
+        if (! VerifyCode::verify($data['phone'], $data['verify_code'])) {
+            return $listen->userValidationError('verify code error');
+        }
 
+        $user = $this->userModel->getByPhone($data['phone']);
         if ($user) {
             return $listener->UserFound($user);
         }
-        return $listener->userNotFound();
+
+        // if user not found, create a new account
+        //return $listener->userNotFound();
+        $user = User::create(['phone'=>$data['phone']]);
+        if (! $user) {
+            return $listen->userValidationError($user->getErrors());
+        }
+        return $listenr->userCreated($user);
+
     }
 
     public function authByRobotSn(AuthenticatorListener $listener, $robot_sn)

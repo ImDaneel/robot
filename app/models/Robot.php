@@ -1,6 +1,7 @@
 <?php
 
-class Robot extends \Eloquent {
+class Robot extends \Eloquent
+{
 
     // Enable soft delete
     use SoftDeletingTrait;
@@ -18,5 +19,19 @@ class Robot extends \Eloquent {
     public function adminUser()
     {
         return $this->belongsTo('\User', 'admin_id');
+    }
+
+    public function getAdminSign()
+    {
+        $user = $this->adminUser()->get();
+        if (! empty($user->phone)) {
+            return $user->phone;
+        }
+        return $this->sn;
+    }
+
+    public static function findBySn($sn)
+    {
+        return static::where('sn', '=', $sn)->firstOrFail();
     }
 }

@@ -20,12 +20,12 @@ Route::get('/', function()
 
 Route::get('login', [
     'as' => 'login',
-    'uses' => 'AuthController@authenticate',
+    'uses' => 'AuthController@login',
 ]);
 
 Route::post('login', [
     'as' => 'login',
-    'uses' => 'AuthController@authenticate',
+    'uses' => 'AuthController@login',
 ]);
 
 Route::post('register',  [
@@ -46,6 +46,11 @@ Route::post('initialize', [
 Route::get('send-verify-code', [
     'as' => 'send-verify-code',
     'uses' => 'AuthController@sendVerifyCode',
+]);
+
+Route::post('auth', [
+    'as' => 'auth',
+    'uses' => 'AuthController@authenticate',
 ]);
 
 # ------------------ User stuff ------------------------
