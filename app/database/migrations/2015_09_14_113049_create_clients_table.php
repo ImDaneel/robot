@@ -19,9 +19,7 @@ class CreateClientsTable extends Migration {
             $table->string('external_addr')->nullable();
             $table->string('internal_addr')->nullable();
             $table->integer('status')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
-
+            $table->timestamp('updated_at');
         });
     }
 

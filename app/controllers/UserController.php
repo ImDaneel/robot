@@ -99,4 +99,30 @@ class UserController extends \BaseController
         return JsonView::make('success', ['robots'=>$robots]);
     }
 
+    public function authResponse()
+    {
+        $data = Input::only('phone', 'robot_sn', 'token');
+        if (! AuthRequest::where($data)) {
+            return JsonView::make('error', ['errors'=>'auth infomation error']);
+        }
+
+        $user = Auth::user();
+        if (! $user->is_admin || Robot::findBySn($data['robot_sn'])->admin_id != $user->id) {
+            return JsonView::make('error', ['errors'=>'You are not admin user']);
+        }
+
+        $reply = Input::get('reply');
+        require __DIR__ . '\..\Robot\Utils\PushServer.php';
+        if (! PushServer::push('authreply', $data['phone'], ['reply'=>$reply])) {
+            return JsonView::make('error', ['errors'=>'push message error']);
+        }
+
+        if ($reply == 'accept') {
+            $user = User::firstOrCreate(['phone'=>$data['phone']]);
+            Robot::findBySn($data['robot_sn'])->users()->attach($user->id);
+        }
+
+        return JsonView::make('success');
+    }
+
 }

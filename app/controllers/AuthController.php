@@ -69,9 +69,22 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
             return JsonView::make('error', ['errors'=>'verify code error']);
         }
 
-        $sign = Robot::findBySn($data['sn'])->getAdminSign();
-        $datetime = date('YmdHis', time());
-        $token = md5($data['phone'].$data['sn'].$datetime);
+        $sign = Robot::findBySn($data['robot_sn'])->getAdminSign();
+        $content = [
+            'phone' => $data['phone'],
+            'robot_sn' => $data['robot_sn'],
+            'token' => md5($data['phone'] . $data['robot_sn'] . date('YmdHis', time())),
+        ];
+
+        require __DIR__ . '\..\Robot\Utils\PushServer.php';
+        if (! PushServer::push('auth', $sign, $content)) {
+            return JsonView::make('error', ['errors'=>'push message error']);
+        }
+
+        $content['created_at'] = time();
+        AuthRequest::create($content);
+
+        return JsonView::make('success');
     }
 
     /**

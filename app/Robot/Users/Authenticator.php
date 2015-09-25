@@ -51,7 +51,7 @@ class Authenticator
         if (! $user) {
             return $listen->userValidationError($user->getErrors());
         }
-        return $listenr->userCreated($user);
+        return $listen->userCreated($user);
 
     }
 

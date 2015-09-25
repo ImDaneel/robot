@@ -1,10 +1,10 @@
 <?php
 
-class Client extends Eloquent {
-
-    // Enable soft delete
-    use SoftDeletingTrait;
-    protected $dates = ['deleted_at'];
+class Client extends Eloquent
+{
+    protected $primaryKey = 'sign';
 
     protected $guarded = [];
+
+    public $timestamps = false;
 }

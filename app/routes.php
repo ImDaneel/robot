@@ -79,6 +79,12 @@ Route::get('user/robots', [
     'before' => 'auth',
 ]);
 
+Route::post('user/auth-response', [
+    'as' => 'user.auth-response',
+    'uses' => 'UserController@authResponse',
+    'before' => 'auth',
+]);
+
 # ------------------ Resource Route ------------------------
 
 //Route::resource('user', 'UserController', ['only' => ['show', 'update', 'destroy']]);

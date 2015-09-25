@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../../models/Client.php';
+require '/home/vagrant/robot/app/models/Client.php';
 
 class PushServer
 {
@@ -37,7 +37,7 @@ class PushServer
     private static function checkin($addr, $data)
     {
         $data['external_addr'] = $addr;
-        $data['updated_at'] = date('Y-m-d H:i:s', time());
+        $data['updated_at'] = time();
         $where = array('sign'=>$data['sign']);
 
         try {
@@ -47,15 +47,10 @@ class PushServer
         }
     }
 
-    public static function push($sign, $message)
+    public static function push($type, $sign, array $content)
     {
         $client = Client::find($sign);
         if ($client == null) {
-            return false;
-        }
-
-        $timestamp = strtotime($client['timestamp']);
-        if (time() - $timestamp > 3 * 60) {
             return false;
         }
 
@@ -65,20 +60,22 @@ class PushServer
             return false;
         }
 
+        $message = json_encode([
+            'topic' => 'Push'.ucfirst(strtolower($type)),
+            'content' => $content,
+        ], true);
+        if ($message == null) {
+            return false;
+        }
+
         $success = false;
         stream_set_timeout($handle, 3);
-        for ($i = 0; $i < 3; $i++, sleep(2)) {
+        for ($i = 0; $i < 3; $i++) {
             fwrite($handle, $message);
-            //stream_socket_sendto($handle, $message);
             $result = fread($handle, 1024);
-            //$result = stream_socket_recvfrom($handle, 1024, 0, $peer);
 
             $retArray = json_decode($result, true);
-            if ($retArray == null) {
-                continue;
-            }
-
-            if ($retArray['code'] == 'success') {
+            if (isset($retArray['topic']) && $retArray['topic'] == 'PushAck') {
                 $success = true;
                 break;
             }
