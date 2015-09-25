@@ -37,7 +37,7 @@ class Authenticator
     {
         $this->validator->validate($data);
         if (! VerifyCode::verify($data['phone'], $data['verify_code'])) {
-            return $listen->userValidationError('verify code error');
+            return $listener->userValidationError('verify code error');
         }
 
         $user = $this->userModel->getByPhone($data['phone']);
@@ -49,9 +49,9 @@ class Authenticator
         //return $listener->userNotFound();
         $user = User::create(['phone'=>$data['phone']]);
         if (! $user) {
-            return $listen->userValidationError($user->getErrors());
+            return $listener->userValidationError($user->getErrors());
         }
-        return $listen->userCreated($user);
+        return $listener->userCreated($user);
 
     }
 
