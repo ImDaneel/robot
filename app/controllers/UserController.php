@@ -1,5 +1,7 @@
 <?php
 
+use Robot\Utils\PushService;
+
 class UserController extends \BaseController
 {
 
@@ -112,8 +114,7 @@ class UserController extends \BaseController
         }
 
         $reply = Input::get('reply');
-        require __DIR__ . '\..\Robot\Utils\PushServer.php';
-        if (! PushServer::push('authreply', $data['phone'], ['reply'=>$reply])) {
+        if (! PushService::push('authreply', $data['phone'], ['reply'=>$reply])) {
             return JsonView::make('error', ['errors'=>'push message error']);
         }
 

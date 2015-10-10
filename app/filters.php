@@ -18,7 +18,7 @@ App::before(function($request)
         $statusCode = 204;
 
         $headers = [
-            'Access-Control-Allow-Origin'      => 'http://test.localhost',
+            'Access-Control-Allow-Origin'      => '*',
             'Allow'                            => 'POST,GET,OPTIONS,PUT,DELETE',
             'Access-Control-Allow-Headers'     => 'Content-Type,X-Auth-Token,Orgin',
             'Access-Control-Allow-Credentials' => 'true'
@@ -32,7 +32,7 @@ App::before(function($request)
 App::after(function($request, $response)
 {
     //
-    $response->header('Access-Control-Allow-Origin', 'http://test.localhost')
+    $response->header('Access-Control-Allow-Origin', '*')
              ->header('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE')
              ->header('Access-Control-Allow-Headers', 'Content-Type,X-Auth-Token,Orgin')
              ->header('Access-Control-Allow-Credentials', 'true');

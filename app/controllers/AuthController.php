@@ -2,6 +2,7 @@
 
 use Robot\Listeners\UserCreatorListener;
 use Robot\Listeners\AuthenticatorListener;
+use Robot\Utils\PushService;
 
 class AuthController extends BaseController implements UserCreatorListener, AuthenticatorListener
 {
@@ -76,8 +77,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
             'token' => md5($data['phone'] . $data['robot_sn'] . date('YmdHis', time())),
         ];
 
-        require __DIR__ . '\..\Robot\Utils\PushServer.php';
-        if (! PushServer::push('auth', $sign, $content)) {
+        if (! PushService::push('auth', $sign, $content)) {
             return JsonView::make('error', ['errors'=>'push message error']);
         }
 
