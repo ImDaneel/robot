@@ -49,12 +49,13 @@ def pushSocket(queue):
             msg = json.loads(msg)
             topic = str(msg['topic'])
             content = msg['content']
+
+            if content == None:
+                content = dict()
+            content['external_addr'] = addr[0] + ':' + str(addr[1])
         except:
             continue
 
-        if content == None:
-            content = dict()
-        content['external_addr'] = addr[0] + ':' + str(addr[1])
         gm_request = gm_client.submit_job(topic, json.dumps(content), background=False, wait_until_complete=False)
 
     sock.close()

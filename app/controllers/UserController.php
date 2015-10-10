@@ -113,6 +113,10 @@ class UserController extends \BaseController
             return JsonView::make('error', ['errors'=>'You are not admin user']);
         }
 
+        if (! AuthRequest::validate($data)) {
+            return JsonView::make('error', ['errors'=>'request data error']);
+        }
+
         $reply = Input::get('reply');
         if (! PushService::push('authreply', $data['phone'], ['reply'=>$reply])) {
             return JsonView::make('error', ['errors'=>'push message error']);
