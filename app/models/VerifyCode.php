@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class VerifyCode extends \Eloquent
 {
     protected $guarded = ['id'];
@@ -8,12 +10,17 @@ class VerifyCode extends \Eloquent
 
     public static function verify($phone, $code)
     {
-        $record = static::where('phone', '=', $phone)->orderBy('created_at', 'desc')->first();
+        $record = static::where('phone', '=', $phone)->orderBy('created_at', 'desc');
 
-        if (! $record || $record['code'] != $code) {
+        try {
+            if ($record->firstOrFail()->code != $code) {
+                return false;
+            }
+        } catch (ModelNotFoundException $e) {
             return false;
         }
 
+        $record->delete();
         return true;
     }
 }
