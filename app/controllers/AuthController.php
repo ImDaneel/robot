@@ -78,7 +78,8 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
         ];
 
         if (! PushService::push('auth', $sign, $content)) {
-            return JsonView::make('error', ['errors'=>'push message error']);
+            // if not success, save it
+            //return JsonView::make('failed', ['errors'=>'push message error']);
         }
 
         $content['created_at'] = time();
@@ -123,7 +124,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
 
     private function userView($user)
     {
-        $forumName = $user->getForumName();
+        $forumName = $user->getName();
         $code = md5($forumName.Config::get('app.forum_key'));
         $srcUrl = Config::get('app.forum_url').'login?id='.$user['id'].'&name='.$forumName.'&code='.$code;
 

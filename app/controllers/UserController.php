@@ -119,7 +119,8 @@ class UserController extends \BaseController
 
         $reply = Input::get('reply');
         if (! PushService::push('authreply', $data['phone'], ['reply'=>$reply])) {
-            return JsonView::make('error', ['errors'=>'push message error']);
+            // if not success, save it
+            //return JsonView::make('failed', ['errors'=>'push message error']);
         }
 
         if ($reply == 'accept') {
@@ -130,4 +131,13 @@ class UserController extends \BaseController
         return JsonView::make('success');
     }
 
+    public function getPushNotifications()
+    {
+        $user = Auth::user();
+        $rows = PushNotifications::where(['sign'=>$user->getName()]);
+        $notifications = $rows->get()->toArray();
+        $rows->delete();
+
+        return JsonView::make('success', ['notifications'=>$notifications]);
+    }
 }

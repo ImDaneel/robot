@@ -85,6 +85,12 @@ Route::post('user/auth-response', [
     'before' => 'auth',
 ]);
 
+Route::get('user/get-push-notifications', [
+    'as' => 'user.get-push-notifications',
+    'uses' => 'UserController@getPushNotifications',
+    'before' => 'auth',
+]);
+
 # ------------------ Resource Route ------------------------
 
 //Route::resource('user', 'UserController', ['only' => ['show', 'update', 'destroy']]);

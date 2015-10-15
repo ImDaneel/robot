@@ -59,7 +59,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return null;
     }
 
-    public function getForumName()
+    public function getName()
     {
         if (! empty($this->phone)) {
             return $this->phone;
