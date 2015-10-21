@@ -2,9 +2,9 @@
 
 class Client extends Eloquent
 {
-    protected $primaryKey = 'sign';
+    protected $guarded = ['id'];
 
-    protected $guarded = [];
+    protected $hidden = ['id'];
 
     public $timestamps = false;
 }

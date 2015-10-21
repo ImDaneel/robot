@@ -14,9 +14,10 @@ class CreateClientsTable extends Migration {
     {
         Schema::create('clients', function(Blueprint $table)
         {
-            $table->string('sign')->primary();
+            $table->increments('id');
+            $table->string('sign')->index();
             $table->string('type')->nullable();
-            $table->string('external_addr')->nullable();
+            $table->string('external_addr');
             $table->string('internal_addr')->nullable();
             $table->integer('status')->nullable();
             $table->timestamp('updated_at');

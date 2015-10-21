@@ -104,17 +104,13 @@ class UserController extends \BaseController
     public function authResponse()
     {
         $data = Input::only('phone', 'robot_sn', 'token');
-        if (! AuthRequest::where($data)) {
-            return JsonView::make('error', ['errors'=>'auth infomation error']);
+        if (! AuthRequest::validate($data)) {
+            return JsonView::make('error', ['errors'=>'request data error']);
         }
 
         $user = Auth::user();
         if (! $user->is_admin || Robot::findBySn($data['robot_sn'])->admin_id != $user->id) {
             return JsonView::make('error', ['errors'=>'You are not admin user']);
-        }
-
-        if (! AuthRequest::validate($data)) {
-            return JsonView::make('error', ['errors'=>'request data error']);
         }
 
         $reply = Input::get('reply');
@@ -129,15 +125,5 @@ class UserController extends \BaseController
         }
 
         return JsonView::make('success');
-    }
-
-    public function getPushNotifications()
-    {
-        $user = Auth::user();
-        $rows = PushNotifications::where(['sign'=>$user->getName()]);
-        $notifications = $rows->get()->toArray();
-        $rows->delete();
-
-        return JsonView::make('success', ['notifications'=>$notifications]);
     }
 }

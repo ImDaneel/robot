@@ -1,53 +1,49 @@
 <?php namespace Robot\Utils;
 
 use Client;
-use PushNotifications;
+use PushNotification;
 
 class PushService
 {
     public static function push($type, $sign, array $content)
     {
-        $client = Client::find($sign);
-        if ($client == null) {
-            static::save($type, $sign, $content);
+        try {
+            $notification = static::saveNotification($type, $sign, $content);
+            $client = Client::where(['sign'=>$sign])->firstOrFail();
+        } catch (\Exception $e) {
             return false;
         }
 
-        $message = json_encode([
-            'type' => $type,
-            'address' => $client['external_addr'],
-            'content' => $content,
-        ], true);
+        $messageArray = $notification->toArray();
+        $messageArray['address'] = $client['external_addr'];
+        $message = json_encode($messageArray, true);
         if ($message == null) {
+            echo "json error\n";
             return false;
         }
 
-        $gmClient = new GearmanClient();
+        $gmClient = new \GearmanClient();
         $gmClient->addServer();
 
         $ret = $gmClient->doNormal('Push', $message);
         if ($ret != 'success') {
-            static::save($type, $sign, $content);
             return false;
         }
         return true;
     }
 
-    private static function save($type, $sign, array $content)
+    private static function saveNotification($type, $sign, array $content)
     {
-        $message = json_encode([
-            'topic' => 'Push' . ucfirst(strtolower($type)),
-            'content' => $content,
-        ], true);
-        if ($message == null) {
-            return;
-        }
+        $contentStr = json_encode($content, true);
+        $msgId = md5($type . $sign . $contentStr . date('YmdHis', time()) . rand(1000, 9999));
+        $topic = 'Push' . ucfirst(strtolower($type));
 
-        PushNotifications::create([
+        return PushNotification::create([
+            'msg_id' => $msgId,
             'sign' => $sign,
-            'message' => $message,
+            'topic' => $topic,
+            'content' => $contentStr,
             'created_at' => time()
         ]);
     }
 }
-

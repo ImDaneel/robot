@@ -13,21 +13,24 @@ class SendThread(threading.Thread):
 
     def run(self):
         while True:
-            data = self.__queue.get(True)
-            if not data:
+            msg = self.__queue.get(True)
+            if not msg:
                 continue
-            #print "recevied:", data, "from queue"
+            #print "recevied:", msg, "from queue"
 
             try:
-                data = json.loads(data)
-                topic = 'Push' + (str(data['type'])).capitalize()
-                addr = (str(data['address'])).split(':')
-                content = data['content']
+                data = json.loads(msg)
+                if data['content'] == None:
+                    data['content'] = {}
+                else:
+                    data['content'] = json.loads(data['content'])
+
+                data['content']['id'] = data.pop('msg_id')
+                addr = (str(data.pop('address'))).split(':')
             except:
                 continue
 
-            msg = dict(topic=topic, content=content)
-            self.__sock.sendto(json.dumps(msg), (addr[0], int(addr[1])))
+            self.__sock.sendto(json.dumps(data), (addr[0], int(addr[1])))
 
 def pushSocket(queue):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

@@ -15,8 +15,10 @@ class CreatePushNotificationsTable extends Migration {
         Schema::create('push_notifications', function(Blueprint $table)
         {
             $table->increments('id');
+            $table->string('msg_id')->index();
             $table->string('sign')->index();
-            $table->text('message');
+            $table->string('topic');
+            $table->text('content');
             $table->timestamp('created_at');
         });
     }
