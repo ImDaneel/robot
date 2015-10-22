@@ -1,7 +1,6 @@
 <?php  namespace Robot\Validators;
 
 use Laracasts\Validation\FormValidator;
-use Laracasts\Validation\FormValidationException;
 
 class AuthValidator extends FormValidator
 {

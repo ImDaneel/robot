@@ -85,6 +85,13 @@ Route::post('user/auth-response', [
     'before' => 'auth',
 ]);
 
+# ------------------ Version ------------------------
+
+Route::get('version/push-latest', [
+    'as' => 'version.push-latest',
+    'uses' => 'VersionController@pushLatest',
+]);
+
 # ------------------ Resource Route ------------------------
 
 //Route::resource('user', 'UserController', ['only' => ['show', 'update', 'destroy']]);

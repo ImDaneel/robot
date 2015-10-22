@@ -5,13 +5,17 @@ use PushNotification;
 
 class PushService
 {
-    public static function push($type, $sign, array $content)
+    public static function push($type, $sign, array $content,  $immediate = true)
     {
         try {
             $notification = static::saveNotification($type, $sign, $content);
             $client = Client::where(['sign'=>$sign])->firstOrFail();
         } catch (\Exception $e) {
             return false;
+        }
+
+        if (! $immediate) {
+            return true;
         }
 
         $messageArray = $notification->toArray();
