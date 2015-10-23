@@ -2,7 +2,7 @@
 
 class Version extends \Eloquent
 {
-    protected $fillable = [];
+    protected $guarded = ['id'];
 
     public static function getLatest($type)
     {
