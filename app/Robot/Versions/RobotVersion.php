@@ -17,6 +17,7 @@ class RobotVersion extends VersionManager
 
         $content = [
             'ftp_host' => Config::get('ftp.host'),
+            'ftp_port' => Config::get('ftp.port'),
             'ftp_username' => Config::get('ftp.username'),
             'ftp_password' => Config::get('ftp.password'),
             'version_file' => $version->file_path,

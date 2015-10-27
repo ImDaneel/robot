@@ -23,11 +23,11 @@ $tar->extract($tmpPath);
 
 $xml = simplexml_load_file($tmpPath.'download.xml');
 $basePath = $xml->getName();
-$ftp_root = '/var/daneel/version';
+$ftp_root = '/var/daneel/version/';
 
 foreach ($xml->package as $xmlElement) {
     $attr = $xmlElement->attributes();
-    $path = '/' . $basePath . '/' . $attr['name'] . '/';
+    $path = $basePath . '/' . $attr['name'] . '/';
     $file = $attr['name'] . '_' . $attr['version'] . '.tar.bz2';
 
     if (! file_exists($ftp_root.$path)) {
@@ -38,7 +38,7 @@ foreach ($xml->package as $xmlElement) {
 }
 
 $ver = (string) $xml['version'];
-$versionFile = '/robot/version_' . $ver . '.xml';
+$versionFile = 'robot/version_' . $ver . '.xml';
 $xml->asXML($ftp_root.$versionFile);
 
 $data = [

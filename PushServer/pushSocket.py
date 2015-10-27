@@ -25,7 +25,6 @@ class SendThread(threading.Thread):
                 else:
                     data['content'] = json.loads(data['content'])
 
-                data['content']['id'] = data.pop('msg_id')
                 addr = (str(data.pop('address'))).split(':')
             except:
                 continue
