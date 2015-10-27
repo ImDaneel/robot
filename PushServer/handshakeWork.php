@@ -18,11 +18,12 @@ $worker->addFunction('ShakeHands', function(GearmanJob $job) {
         return false;
     }
 
-    $data['updated_at'] = time();
-    $where = array('sign'=>$data['sign']);
-
     try {
-        $client = Client::updateOrCreate($where, $data);
+        $values = $data['content'];
+        $values['external_addr'] = $data['address'];
+        $values['updated_at'] = time();
+
+        $client = Client::updateOrCreate(['sign'=>$values['sign']], $values);
     } catch (\Exception $e) {
         return false;
     }
@@ -36,7 +37,7 @@ $worker->addFunction('PushAck', function(GearmanJob $job) {
     }
 
     try {
-        PushNotification::where(['msg_id'=>$data['id']])->firstOrFail()->delete();
+        PushNotification::where(['msg_id'=>$data['msg_id']])->firstOrFail()->delete();
     } catch (\Exception $e) {
         return false;
     }
