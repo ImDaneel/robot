@@ -97,6 +97,9 @@ class UserController extends \BaseController
     {
         $id = Auth::id();
         $robots = User::findOrFail($id)->robots()->get()->toArray();
+        if (empty($robots)) {
+            $robots = null;
+        }
 
         return JsonView::make('success', ['robots'=>$robots]);
     }
