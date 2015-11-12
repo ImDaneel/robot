@@ -6,7 +6,7 @@ use Laracasts\Validation\FormValidationException;
 class InitializeValidator extends FormValidator
 {
     protected $rules = [
-        'app_type'    => 'required|in:iosAPP,androidAPP',
+        'app_type'    => 'required|in:ios,android',
         'robot_sn'    => 'required|unique:robots,sn',
     ];
 
