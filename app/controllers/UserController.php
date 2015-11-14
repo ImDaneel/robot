@@ -117,7 +117,7 @@ class UserController extends \BaseController
         }
 
         $reply = Input::get('reply');
-        if (! PushService::push('authreply', $data['phone'], ['reply'=>$reply])) {
+        if (! PushService::push('authreply', $data['phone'], ['reply'=>$reply, 'robot_sn'=>$data['robot_sn']])) {
             // if not success, save it
             //return JsonView::make('failed', ['errors'=>'push message error']);
         }
