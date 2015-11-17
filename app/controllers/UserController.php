@@ -51,8 +51,8 @@ class UserController extends \BaseController
 
         if (($file = Input::file('avatar_image')) != null) {
             $result = $this->uploadAvatar($id, $file);
-            if (isset($result['error'])) {
-                return JsonView::make('failed', $result);
+            if (isset($result['errors'])) {
+                return JsonView::make('error', $result);
             }
             $data['avatar'] = $result['filename'];
         }
@@ -79,11 +79,11 @@ class UserController extends \BaseController
         $allowed_extensions = ["png", "jpg", "gif"];
 
         if (!$file->isValid()) {
-            return ['error' => 'Error while uploading file.'];
+            return ['errors' => 'Error while uploading file.'];
         }
 
         if ($file->getClientOriginalExtension() && !in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
-            return ['error' => 'You may only upload png, jpg or gif.'];
+            return ['errors' => 'You may only upload png, jpg or gif.'];
         }
 
         $ext = $file->getClientOriginalExtension();

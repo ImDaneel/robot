@@ -102,7 +102,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
 
     public function userValidationError($errors)
     {
-        return JsonView::make('failed', ['errors' => $errors]);
+        return JsonView::make('error', ['errors' => $errors]);
     }
 
     /**
@@ -113,7 +113,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
 
     public function userNotFound()
     {
-        return JsonView::make('failed', ['errors' => 'Wrong username or password.']);
+        return JsonView::make('error', ['errors' => 'Wrong username or password.']);
     }
 
     public function userFound($user)

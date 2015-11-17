@@ -11,6 +11,15 @@ class Robot extends \Eloquent
 
     protected $guarded = ['id'];
 
+    protected $hidden = [
+        'id',
+        'admin_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'pivot',
+    ];
+
     public function users()
     {
         return $this->belongsToMany('\User', 'robot_user');
