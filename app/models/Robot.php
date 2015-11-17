@@ -43,4 +43,11 @@ class Robot extends \Eloquent
     {
         return static::where('sn', '=', $sn)->firstOrFail();
     }
+
+    public function addUser($userId)
+    {
+        if (! $this->users()->find($userId)) {
+            $this->users()->attach($userId);
+        }
+    }
 }

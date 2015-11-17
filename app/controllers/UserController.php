@@ -124,7 +124,7 @@ class UserController extends \BaseController
 
         if ($reply == 'accept') {
             $user = User::firstOrCreate(['phone'=>$data['phone']]);
-            Robot::findBySn($data['robot_sn'])->users()->attach($user->id);
+            Robot::findBySn($data['robot_sn'])->addUser($user->id);
         }
 
         return JsonView::make('success');
