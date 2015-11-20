@@ -95,4 +95,5 @@ Route::get('version/push-latest', [
 # ------------------ Resource Route ------------------------
 
 //Route::resource('user', 'UserController', ['only' => ['show', 'update', 'destroy']]);
+Route::resource('robot.schedule', 'RobotScheduleController');
 

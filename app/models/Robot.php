@@ -50,4 +50,9 @@ class Robot extends \Eloquent
             $this->users()->attach($userId);
         }
     }
+
+    public function schedules()
+    {
+        return $this->hasMany('Schedule');
+    }
 }
