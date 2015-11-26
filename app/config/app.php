@@ -85,6 +85,7 @@ return array(
 	'forum_key' => 'YourSecretKey!!!',
 	'forum_url' => getenv('forum_url'),
 
+    'map_path' => '/var/daneel/map/',
 	/*
 	|--------------------------------------------------------------------------
 	| Autoloaded Service Providers
@@ -194,7 +195,6 @@ return array(
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
 		'JsonView'          => 'Robot\Facades\JsonView',
-
 	),
 
 );

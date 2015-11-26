@@ -11,7 +11,7 @@ class RobotScheduleController extends \BaseController
      */
     public function index($robotSn)
     {
-        $schedules = Robot::findBySn($robotSn)->firstOrFail()->schedules()->get();
+        $schedules = Robot::findBySn($robotSn)->schedules()->get();
         return JsonView::make('success', ['schedules'=>$schedules]);
     }
 
@@ -34,7 +34,7 @@ class RobotScheduleController extends \BaseController
      */
     public function store($robotSn)
     {
-        $robot = Robot::findBySn($robotSn)->firstOrFail();
+        $robot = Robot::findBySn($robotSn);
 
         $data = Input::all();
         if (isset($data['repeat']) && ! is_array($data['repeat'])) {
@@ -58,7 +58,7 @@ class RobotScheduleController extends \BaseController
      */
     public function show($robotSn, $scheduleId)
     {
-        $robot = Robot::findBySn($robotSn)->firstOrFail();
+        $robot = Robot::findBySn($robotSn);
         $schedule = $robot->schedules()->findOrFail($scheduleId);
 
         return JsonView::make('success', ['schedule'=>$schedule]);
@@ -85,7 +85,7 @@ class RobotScheduleController extends \BaseController
      */
     public function update($robotSn, $scheduleId)
     {
-        $robot = Robot::findBySn($robotSn)->firstOrFail();
+        $robot = Robot::findBySn($robotSn);
         $schedule = $robot->schedules()->findOrFail($scheduleId);
 
         $data = Input::all();
@@ -109,7 +109,7 @@ class RobotScheduleController extends \BaseController
      */
     public function destroy($robotSn, $scheduleId)
     {
-        $robot = Robot::findBySn($robotSn)->firstOrFail();
+        $robot = Robot::findBySn($robotSn);
         $schedule = $robot->schedules()->findOrFail($scheduleId);
 
         $schedule->delete();

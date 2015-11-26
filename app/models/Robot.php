@@ -55,4 +55,9 @@ class Robot extends \Eloquent
     {
         return $this->hasMany('Schedule');
     }
+
+    public function maps()
+    {
+        return $this->hasMany('Map');
+    }
 }

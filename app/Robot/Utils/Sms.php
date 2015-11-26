@@ -54,7 +54,7 @@ class Sms
             } else {
                 $error = static::$errorMessage[$outArray['statusCode']];
             }
-            return ['code' => 'failed', 'error' => $error];
+            return ['code' => 'error', 'error' => $error];
         }
 
         return ['code' => 'success'];
