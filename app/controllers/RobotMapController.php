@@ -13,9 +13,8 @@ class RobotMapController extends \BaseController
     {
         $where = Input::only('begin', 'end');
 
-        App::make('Robot\Validators\MapIndexValidator')->validate($where);
+        App::make('Robot\Validators\QueryDateValidator')->validate($where);
 
-        //$maps = Robot::findBySn($robotSn)->maps()->get();
         $maps = Robot::findBySn($robotSn)->maps();
         if ($where['begin']) {
             $maps = $maps->where('created_at', '>=', $where['begin']);

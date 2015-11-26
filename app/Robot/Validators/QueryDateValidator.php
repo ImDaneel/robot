@@ -2,7 +2,7 @@
 
 use Laracasts\Validation\FormValidator;
 
-class MapIndexValidator extends FormValidator
+class QueryDateValidator extends FormValidator
 {
     protected $rules = [
         'begin' => 'sometimes|date_format:Y-m-d',

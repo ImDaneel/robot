@@ -60,4 +60,9 @@ class Robot extends \Eloquent
     {
         return $this->hasMany('Map');
     }
+
+    public function cleanReports()
+    {
+        return $this->hasMany('CleanReport');
+    }
 }
