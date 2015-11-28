@@ -97,4 +97,5 @@ Route::get('version/push-latest', [
 Route::resource('robot.schedule', 'RobotScheduleController');
 Route::resource('robot.map', 'RobotMapController', ['only' => ['index', 'store', 'show']]);
 Route::resource('robot.report', 'RobotReportController', ['only' => ['index', 'store']]);
+Route::resource('robot.log', 'RobotLogController', ['only' => ['index', 'store']]);
 

@@ -65,4 +65,9 @@ class Robot extends \Eloquent
     {
         return $this->hasMany('CleanReport');
     }
+
+    public function errorLogs()
+    {
+        return $this->hasMany('ErrorLog');
+    }
 }
