@@ -1,6 +1,17 @@
 <?php
 
-class DatabaseSeeder extends Seeder {
+class DatabaseSeeder extends Seeder
+{
+    protected $tables = [
+        'robot_user',
+        'users',
+        'robots',
+    ];
+
+    protected $seeders = [
+        'RobotTableSeeder',
+        'UserTableSeeder',
+    ];
 
 	/**
 	 * Run the database seeds.
@@ -11,7 +22,19 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		// $this->call('UserTableSeeder');
+        $this->cleanDatabase();
+
+        foreach ($this->seeders as $seedClass) {
+            $this->call($seedClass);
+        }
 	}
 
+    public function cleanDatabase()
+    {
+        //DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        foreach ($this->tables as $table) {
+            DB::table($table)->truncate();
+        }
+        //DB::statement('SET FOREIGN_KEY_CHECKS=1');
+    }
 }

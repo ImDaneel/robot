@@ -15,4 +15,22 @@
             <directory>./app/tests/</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./app</directory>
+            <exclude>
+                <directory suffix=".php">./app/tests</directory>
+                <!--
+                <file>../application/controllers/ErrorController.php</file>
+                -->
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <listeners>
+        <listener class="\Mockery\Adapter\Phpunit\TestListener"
+                  file="vendor/mockery/mockery/library/Mockery/Adapter/Phpunit/TestListener.php">
+        </listener>
+    </listeners>
 </phpunit>
