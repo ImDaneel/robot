@@ -51,10 +51,8 @@ App::error(function(Exception $exception, $code)
 	Log::error($exception);
 });
 
-/*
- * General Form Validation error handling.
- */
-App::error(function (Laracasts\Validation\FormValidationException $exception, $code) {
+function validationErrorResponse(\Exception $exception, $code)
+{
     $errors = $exception->getErrors();
     if ($errors instanceof Illuminate\Support\Contracts\MessageProviderInterface)
     {
@@ -68,6 +66,20 @@ App::error(function (Laracasts\Validation\FormValidationException $exception, $c
     );
 
     return JsonView::make('error', $message);
+}
+
+/*
+ * General Form Validation error handling.
+ */
+App::error(function (Laracasts\Validation\FormValidationException $exception, $code) {
+    return validationErrorResponse($exception, $code);
+});
+
+/*
+ * General Model Validation error handling.
+ */
+App::error(function (LaravelBook\Ardent\InvalidModelException $exception, $code) {
+    return validationErrorResponse($exception, $code);
 });
 
 /**

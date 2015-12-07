@@ -129,4 +129,12 @@ class UserController extends \BaseController
 
         return JsonView::make('success');
     }
+
+    public function getFeedbacks()
+    {
+        $user = Auth::user();
+        $feedbacks = $user->feedbacks()->get(['id', 'title', 'created_at']);
+
+        return JsonView::make('success', ['feedbacks' => $feedbacks]);
+    }
 }

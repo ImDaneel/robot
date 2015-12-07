@@ -16,6 +16,9 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
+# ------------------ Route patterns---------------------
+Route::pattern('id', '[0-9]+');
+
 # ------------------ Authentication ------------------------
 
 Route::get('login', [
@@ -53,7 +56,7 @@ Route::post('auth', [
     'uses' => 'AuthController@authenticate',
 ]);
 
-# ------------------ User stuff ------------------------
+# ------------------ User ------------------------
 
 Route::get('user', [
     'as' => 'user.show',
@@ -85,6 +88,30 @@ Route::post('user/auth-response', [
     'before' => 'auth',
 ]);
 
+Route::get('user/feedbacks', [
+    'as' => 'user.feedbacks',
+    'uses' => 'UserController@getFeedbacks',
+    'before' => 'auth',
+]);
+
+Route::post('user/feedback/create', [
+    'as' => 'user.feedback.create',
+    'uses' => 'FeedbackController@store',
+    'before' => 'auth',
+]);
+
+Route::post('user/feedback/upload_image', [
+    'as' => 'user.feedback.upload_image',
+    'uses' => 'FeedbackController@uploadImage',
+    'before' => 'auth',
+]);
+
+Route::get('user/feedback/show/{id}', [
+    'as' => 'user.feedback.show',
+    'uses' => 'FeedbackController@show',
+    'before' => 'auth',
+]);
+
 # ------------------ Version ------------------------
 
 Route::get('version/push-latest', [
@@ -98,4 +125,5 @@ Route::resource('robot.schedule', 'RobotScheduleController');
 Route::resource('robot.map', 'RobotMapController', ['only' => ['index', 'store', 'show']]);
 Route::resource('robot.report', 'RobotReportController', ['only' => ['index', 'store']]);
 Route::resource('robot.log', 'RobotLogController', ['only' => ['index', 'store']]);
+
 

@@ -41,6 +41,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $this->belongsToMany('\Robot', 'robot_user');
     }
 
+    public function feedbacks()
+    {
+        return $this->hasMany('Feedback');
+    }
+
     public function getByPhoneAndPassword($phone, $password)
     {
         return $this->where('phone', '=', $phone)->where('password', '=', $password)->first();
