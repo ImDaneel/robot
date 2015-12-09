@@ -133,8 +133,8 @@ class UserController extends \BaseController
     public function getFeedbacks()
     {
         $user = Auth::user();
-        $feedbacks = $user->feedbacks()->get(['id', 'title', 'created_at']);
+        $feedbacks = $user->feedbacks()->get(['id', 'title', 'created_at'])->toArray();
 
-        return JsonView::make('success', ['feedbacks' => $feedbacks]);
+        return JsonView::make('success', ['feedbacks' => empty($feedbacks) ? null : $feedbacks]);
     }
 }

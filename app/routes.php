@@ -106,8 +106,8 @@ Route::post('user/feedback/upload_image', [
     'before' => 'auth',
 ]);
 
-Route::get('user/feedback/show/{id}', [
-    'as' => 'user.feedback.show',
+Route::get('user/feedback/{id}', [
+    'as' => 'user.feedback',
     'uses' => 'FeedbackController@show',
     'before' => 'auth',
 ]);
@@ -125,5 +125,19 @@ Route::resource('robot.schedule', 'RobotScheduleController');
 Route::resource('robot.map', 'RobotMapController', ['only' => ['index', 'store', 'show']]);
 Route::resource('robot.report', 'RobotReportController', ['only' => ['index', 'store']]);
 Route::resource('robot.log', 'RobotLogController', ['only' => ['index', 'store']]);
+Route::resource('feedback', 'FeedbackController');
+
+# ------------------ Staff ------------------------
+
+Route::get('staff/login', [
+    'as' => 'staff.login',
+    'uses' => 'StaffController@login',
+]);
+
+Route::post('staff/login', [
+    'as' => 'staff.login',
+    'uses' => 'StaffController@authenticate',
+]);
+
 
 
