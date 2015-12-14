@@ -26,6 +26,6 @@ class Markdown
     public function convertMarkdownToHtml($markdown)
     {
         $convertedHmtl = $this->markdownParser->text($markdown);
-        return Purifier::clean($convertedHmtl);
+        return Purifier::clean($convertedHmtl, 'default');
     }
 }
