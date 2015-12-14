@@ -36,6 +36,6 @@ class Image
             $img->save();
         }
 
-        return ['filename' => getCdnDomain() . $folderName .'/'. $safeName];
+        return ['filename' => getUserStaticDomain() . $folderName .'/'. $safeName];
     }
 }
