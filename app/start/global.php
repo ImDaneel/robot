@@ -72,7 +72,11 @@ function validationErrorResponse(\Exception $exception, $code)
  * General Form Validation error handling.
  */
 App::error(function (Laracasts\Validation\FormValidationException $exception, $code) {
-    return validationErrorResponse($exception, $code);
+    if (Request::wantsJson()) {
+        return validationErrorResponse($exception, $code);
+    } else {
+        return Redirect::back()->withInput()->withErrors($exception->getErrors());
+    }
 });
 
 /*

@@ -5,8 +5,6 @@ class FeedbackController extends \BaseController
     public function __construct()
     {
         $this->beforeFilter('csrf', ['on' => 'post']);
-
-        $this->beforeFilter('auth', ['only' => ['store']]);
     }
 
     /**
@@ -17,18 +15,9 @@ class FeedbackController extends \BaseController
      */
     public function index()
     {
-        //
-    }
+        $feedbacks = Feedback::all();
 
-    /**
-     * Show the form for creating a new resource.
-     * GET /feedback/create
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
+        return View::make('feedbacks.index', compact('feedbacks'));
     }
 
     /**
@@ -57,21 +46,13 @@ class FeedbackController extends \BaseController
     public function show($id)
     {
         $feedback = Feedback::findOrFail($id);
-        $replies = $feedback->replies()->orderBy('created_at', 'asc')->with('staff');
+        $replies = $feedback->replies()->orderBy('created_at', 'asc')->get();
 
-        return JsonView::make('success', ['feedback' => $feedback, 'replies' => $replies]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * GET /feedback/{id}/edit
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
+        if (Request::wantsJson()) {
+            return JsonView::make('success', ['feedback' => $feedback, 'replies' => $replies]);
+        } else {
+            return View::make('feedbacks.show', compact('feedback', 'replies'));
+        }
     }
 
     /**
@@ -100,36 +81,9 @@ class FeedbackController extends \BaseController
 
     public function uploadImage()
     {
-        if ($file = Input::file('file')) {
-            $allowed_extensions = ["png", "jpg", "gif"];
-            if ($file->getClientOriginalExtension() && !in_array($file->getClientOriginalExtension(), $allowed_extensions)) {
-                return JsonView::make('error', ['errors' => 'You may only upload png, jpg or gif.']);
-            }
+        $result = Robot\Utils\Image::upload(Input::file('file'), Auth::user()->id);
 
-            $fileName        = $file->getClientOriginalName();
-            $extension       = $file->getClientOriginalExtension() ?: 'png';
-            $folderName      = 'uploads/images/' . date("Ym", time()) .'/'.date("d", time()) .'/'. Auth::user()->id;
-            $destinationPath = public_path() . '/' . $folderName;
-            $safeName        = str_random(10).'.'.$extension;
-            $file->move($destinationPath, $safeName);
-
-            // If is not gif file, we will try to reduse the file size
-            if ($file->getClientOriginalExtension() != 'gif') {
-                // open an image file
-                $img = Image::make($destinationPath . '/' . $safeName);
-                // prevent possible upsizing
-                $img->resize(1440, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                });
-                // finally we save the image as a new file
-                $img->save();
-            }
-
-            return JsonView::make('success', ['filename' => Config::get('app.url') . $folderName .'/'. $safeName]);
-        }
-
-        return JsonView::make('error', ['errors' => 'Error while uploading file']);
+        return JsonView::make(isset($result['errors']) ? 'error' : 'success', $result);
     }
 
 }

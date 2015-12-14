@@ -7,8 +7,12 @@
     "require": {
         "laravel/framework": "4.2.*",
         "laracasts/validation": "~1.0",
+        "laracasts/flash": "~1.0",
         "zizaco/entrust": "1.2.*@dev",
-        "intervention/image": "2.*"
+        "intervention/image": "2.*",
+        "league/html-to-markdown": "2.1.*",
+        "erusev/parsedown": "~1.1",
+        "mews/purifier": "1.0.1"
     },
     "require-dev": {
         "way/generators": "~2.0",
@@ -25,7 +29,8 @@
             "app/tests/TestCase.php"
         ],
         "psr-4": {
-            "Robot\\": "app/Robot"
+            "Robot\\": "app/Robot",
+            "Staff\\": "app/Staff"
         }
     },
     "scripts": {

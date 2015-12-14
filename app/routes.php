@@ -125,7 +125,7 @@ Route::resource('robot.schedule', 'RobotScheduleController');
 Route::resource('robot.map', 'RobotMapController', ['only' => ['index', 'store', 'show']]);
 Route::resource('robot.report', 'RobotReportController', ['only' => ['index', 'store']]);
 Route::resource('robot.log', 'RobotLogController', ['only' => ['index', 'store']]);
-Route::resource('feedback', 'FeedbackController');
+
 
 # ------------------ Staff ------------------------
 
@@ -139,5 +139,39 @@ Route::post('staff/login', [
     'uses' => 'StaffController@authenticate',
 ]);
 
+Route::get('staff/logout', [
+    'as' => 'staff.logout',
+    'uses' => 'StaffController@logout',
+]);
 
+Route::get('staff/home', [
+    'as' => 'staff.home',
+    'uses' => 'StaffController@home',
+    'before' => 'staff_auth',
+]);
+
+Route::get('/staff/update_avatar', [
+    'as' => 'staff.update_avatar',
+    'uses' => 'StaffController@updateAvatar',
+    'before' => 'staff_auth',
+]);
+
+Route::post('/staff/update_avatar', [
+    'as' => 'staff.update_avatar',
+    'uses' => 'StaffController@uploadAvatar',
+    'before' => 'staff_auth',
+]);
+
+Route::post('staff/upload_image', [
+    'as' => 'staff.upload_image',
+    'uses' => 'ReplyController@uploadImage',
+    'before' => 'staff_auth',
+]);
+
+
+Route::group(['before' => 'staff_auth'], function () {
+    Route::resource('feedback', 'FeedbackController', ['only' => ['index', 'show']]);
+    Route::resource('reply', 'ReplyController', ['only' => ['store']]);
+    Route::resource('staff', 'StaffController');
+});
 

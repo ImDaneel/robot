@@ -40,6 +40,15 @@ App::after(function($request, $response)
              ->header('Access-Control-Allow-Headers', 'Content-Type,X-Auth-Token,Orgin')
              ->header('Access-Control-Allow-Credentials', 'true');
 
+    if (Config::get('app.debug')) {
+        $fp = fopen('/home/vagrant/robot/app/storage/logs/log', "a+");
+        $out = date("Y-m-d H:i:s", time()) . ": request is accepted\n";
+        $out .= $request . "\n";
+        $out .= $response . "\n";
+        fputs($fp, $out);
+        fclose($fp);
+    }
+
     return $response;
 });
 
@@ -57,10 +66,17 @@ App::after(function($request, $response)
 Route::filter('auth', function()
 {
     if (Auth::guest()) {
+        return Response::make('Unauthorized', 401);
+    }
+});
+
+Route::filter('staff_auth', function()
+{
+    if (StaffAuth::guest()) {
         if (Request::ajax() || Request::wantsJson()) {
             return Response::make('Unauthorized', 401);
         } else {
-            return Redirect::guest('login');
+            return Redirect::guest('staff/login');
         }
     }
 });

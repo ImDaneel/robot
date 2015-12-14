@@ -86,7 +86,7 @@ class EntrustSetupTable extends Migration {
         // Create User
         $staff = Staff::create([
                 'name' => 'admin',
-                'password' => md5('admin'),
+                'password' => Hash::make('administrator'),
                 'real_name' => 'Administrator'
             ]);
 

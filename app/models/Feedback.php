@@ -1,6 +1,7 @@
 <?php
 
 use LaravelBook\Ardent\Ardent;
+use Markdown;
 
 class Feedback extends Ardent
 {
@@ -28,5 +29,18 @@ class Feedback extends Ardent
     public function replies()
     {
         return $this->hasMany('Reply');
+    }
+
+    public function setBodyAttribute($value)
+    {
+        $markdown = new Markdown;
+        $this->attributes['body'] = $markdown->convertMarkdownToHtml($value);
+    }
+
+    public static function increaseReplyCount($feedbackId)
+    {
+        $feedback = Feedback::findOrFail($feedbackId);
+        $feedback->reply_count++;
+        $feedback->save();
     }
 }

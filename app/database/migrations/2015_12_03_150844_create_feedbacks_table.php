@@ -18,6 +18,7 @@ class CreateFeedbacksTable extends Migration {
             $table->string('title')->index();
             $table->text('body');
             $table->integer('user_id')->unsigned()->index();
+            $table->integer('reply_count')->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -21,7 +21,7 @@ class CreateStaffsTable extends Migration {
             $table->boolean('is_banned')->default(false)->index();
             $table->string('real_name')->nullable()->index();
             $table->string('email')->nullable()->index();
-            $table->string('image_url')->nullable();
+            $table->string('avatar')->nullable();
             $table->softDeletes(); 
             $table->timestamps();
         });

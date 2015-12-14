@@ -16,6 +16,7 @@ class CreateEvaluationsTable extends Migration {
         {
             $table->increments('id');
             $table->integer('feedback_id')->unsigned()->index();
+            $table->tinyInteger('grade')->unsigned();
             $table->text('comment')->nullable();
             $table->timestamps();
         });

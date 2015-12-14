@@ -40,6 +40,11 @@ class Staff extends \Eloquent implements UserInterface, RemindableInterface
         return $this->password;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     /**
      * ----------------------------------------
      * RemindableInterface
