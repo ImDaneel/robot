@@ -90,7 +90,7 @@ class UserController extends \BaseController
         $avatar_name = $id . '_' . time() . '.' . $ext;
         $file->move(public_path('uploads/avatars/'), $avatar_name);
 
-        return ['filename' => Config::get('app.url') . 'uploads/avatars/' . $avatar_name];
+        return ['filename' => getUserStaticDomain() . 'uploads/avatars/' . $avatar_name];
     }
 
     public function getRobots()

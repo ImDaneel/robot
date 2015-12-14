@@ -36,6 +36,6 @@ class Image
             $img->save();
         }
 
-        return ['filename' => Config::get('app.url') . $folderName .'/'. $safeName];
+        return ['filename' => getUserStaticDomain() . $folderName .'/'. $safeName];
     }
 }
