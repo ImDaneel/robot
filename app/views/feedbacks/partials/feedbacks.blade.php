@@ -26,29 +26,12 @@
 
           <div class="media-body meta">
 
-            @if ($feedback->vote_count > 0)
-                <a href="{{ route('feedback.show', [$feedback->id]) }}" class="remove-padding-left" id="pin-{{ $feedback->id }}">
-                    <span class="fa fa-thumbs-o-up"> {{ $feedback->vote_count }} </span>
-                </a>
-                <span> •  </span>
-            @endif
+            <a href="#" title="{{{ $feedback->user->name }}}">
+                {{{ $feedback->user->getName() }}}
+            </a>
+            <span> • </span>
+            <span class="timeago">{{ $feedback->created_at }}</span>
 
-            @if ($feedback->reply_count == 0)
-                <a href="#" title="{{{ $feedback->user->name }}}">
-                    {{{ $feedback->user->getName() }}}
-                </a>
-                <span> • </span>
-                <span class="timeago">{{ $feedback->created_at }}</span>
-            @endif
-
-            @if ($feedback->reply_count > 0 && count($feedback->lastReplyUser))
-                <span> • </span>{{ lang('Last Reply by') }}
-                <a href="{{{ URL::route('users.show', [$feedback->lastReplyUser->id]) }}}">
-                  {{{ $feedback->lastReplyUser->name }}}
-                </a>
-                <span> • </span>
-                <span class="timeago">{{ $feedback->updated_at }}</span>
-            @endif
           </div>
 
         </div>
