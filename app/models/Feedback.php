@@ -31,6 +31,11 @@ class Feedback extends Ardent
         return $this->hasMany('Reply');
     }
 
+    public function evaluation()
+    {
+        return $this->hasOne('Evaluation');
+    }
+
     public function setBodyAttribute($value)
     {
         $markdown = new Markdown;

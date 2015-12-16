@@ -112,6 +112,12 @@ Route::get('user/feedback/{id}', [
     'before' => 'auth',
 ]);
 
+Route::post('user/evaluate', [
+    'as' => 'user.evaluate',
+    'uses' => 'EvaluateController@store',
+    'before' => 'auth',
+]);
+
 # ------------------ Version ------------------------
 
 Route::get('version/push-latest', [
