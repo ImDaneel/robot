@@ -117,15 +117,10 @@ class UserController extends \BaseController
         }
 
         $reply = Input::get('reply');
-        if (! PushService::push('authreply', $data['phone'], ['reply'=>$reply, 'robot_sn'=>$data['robot_sn']])) {
-            // if not success, save it
-            //return JsonView::make('failed', ['errors'=>'push message error']);
-        }
+        AuthRequest::Update($data, ['reply'=>$reply]);
 
-        if ($reply == 'accept') {
-            $user = User::firstOrCreate(['phone'=>$data['phone']]);
-            Robot::findBySn($data['robot_sn'])->addUser($user->id);
-        }
+        $data['reply'] = $reply;
+        PushService::push('authreply', $data['phone'], $data);
 
         return JsonView::make('success');
     }

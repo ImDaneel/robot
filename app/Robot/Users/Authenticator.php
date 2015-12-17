@@ -45,14 +45,7 @@ class Authenticator
             return $listener->UserFound($user);
         }
 
-        // if user not found, create a new account
-        //return $listener->userNotFound();
-        $user = User::create(['phone'=>$data['phone']]);
-        if (! $user) {
-            return $listener->userValidationError($user->getErrors());
-        }
-        return $listener->userCreated($user);
-
+        return $listener->userNotFound();
     }
 
     public function authByRobotSn(AuthenticatorListener $listener, $robot_sn)

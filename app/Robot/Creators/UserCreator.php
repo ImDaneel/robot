@@ -1,9 +1,9 @@
 <?php namespace Robot\Creators;
 
-use Robot\Validators\RegisterValidator;
 use Robot\Listeners\UserCreatorListener;
 use User;
-use Auth;
+use AuthRequest;
+use Robot;
 
 /**
 * This class can call the following methods on the observer object:
@@ -13,21 +13,19 @@ use Auth;
 */
 class UserCreator
 {
-    protected $validator;
-
-    public function __construct(RegisterValidator $registerValidator)
-    {
-        $this->validator = $registerValidator;
-    }
-
     public function create(UserCreatorListener $observer, $data)
     {
         // Validation
-        $this->validator->validate($data);
+        $validData = $data;
+        unset($validData['app_type']);
+        $validData['reply'] = 'accept';
+        if (! AuthRequest::validate($validData)) {
+            return $observer->userValidationError('authentication data error');
+        }
 
-        $user = Auth::user();
+        $user = User::where(['phone'=>$data['phone']])->first();
         if ($user) {
-            $this->updateUserRecord($observer, $data);
+            return $observer->userValidationError('this account is already registered');
         }
 
         return $this->createValidUserRecord($observer, $data);
@@ -35,20 +33,17 @@ class UserCreator
 
     private function createValidUserRecord($observer, $data)
     {
-        $user = User::create($data);
+        $user = User::create([
+            'app_type' => $data['app_type'],
+            'phone' => $data['phone'],
+        ]);
+
         if (! $user) {
             return $observer->userValidationError($user->getErrors());
         }
+
+        Robot::findBySn($data['robot_sn'])->addUser($user->id);
+
         return $observer->userCreated($user);
-    }
-
-    private function updateUserRecord($observer, $data)
-    {
-        if (! empty($user->phone)) {
-                return $observer->userValidationError('this account is already registered');
-            }
-
-            $user->update($data);
-            return $observer->userCreated($user);
     }
 }

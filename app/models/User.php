@@ -1,12 +1,13 @@
 <?php
 
+use LaravelBook\Ardent\Ardent;
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends Ardent implements UserInterface, RemindableInterface {
 
     use UserTrait, RemindableTrait;
 
@@ -35,6 +36,16 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     ];
 
     protected $guarded = ['id'];
+
+    public $throwOnValidation = true;
+
+    public static $rules = [
+        'app_type'     => 'required|in:ios,android',
+        'phone'        => 'required|numeric',
+        'nick_name'    => 'sometimes|alpha_dash',
+        'tandby_phone' => 'sometimes|numeric',
+        'avatar'       => 'sometimes|url',
+    ];
 
     public function robots()
     {

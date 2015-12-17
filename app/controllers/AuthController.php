@@ -26,7 +26,7 @@ class AuthController extends BaseController implements UserCreatorListener, Auth
      */
     public function register()
     {
-        $userData = Input::only('app_type', 'phone', 'password');
+        $userData = Input::only('app_type', 'phone', 'robot_sn', 'token');
         return App::make('Robot\Creators\UserCreator')->create($this, $userData);
     }
 
